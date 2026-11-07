@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 require __DIR__ . '/src/bootstrap.php';
 
-$registry = new Registry(__DIR__ . '/skills');
+$registry = new Registry(__DIR__ . '/skills', __DIR__ . '/apps');
 $apps = new Apps(__DIR__ . '/apps');
 $mcp = new Mcp($registry);
 $base = Http::baseUrl();
@@ -38,11 +38,20 @@ if (preg_match('#^/apps/([a-z0-9-]+)\.js$#', $path, $am) && $method === 'GET') {
     Http::text($src, 'application/javascript');
 }
 
+if (preg_match('#^/apps/([a-z0-9-]+)/vendor/([a-z0-9][a-z0-9.\-]*\.js)$#', $path, $vm) && $method === 'GET' && isset($apps->all()[$vm[1]])) {
+    $file = __DIR__ . '/apps/' . $vm[1] . '/vendor/' . $vm[2];
+    if (!is_file($file)) {
+        Http::json(['error' => 'Not found'], 404);
+    }
+    header('Cache-Control: public, max-age=604800');
+    Http::text((string) file_get_contents($file), 'application/javascript');
+}
+
 // ---- REST API -------------------------------------------------------------
 if ($path === '/api/skills' && $method === 'GET') {
     $list = [];
     foreach ($registry->all() as $name => $def) {
-        $list[] = ['name' => $name, 'title' => $def['title'], 'description' => $def['description'], 'category' => $def['category']];
+        $list[] = ['name' => $name, 'title' => $def['title'], 'description' => $def['description'], 'category' => $def['category'], 'kind' => empty($def['app']) ? 'skill' : 'app'];
     }
     Http::json(['skills' => $list]);
 }

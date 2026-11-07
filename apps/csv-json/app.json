@@ -1,0 +1,35 @@
+{
+  "name": "csv-json",
+  "title": "CSV and JSON converter",
+  "description": "Convert CSV to JSON and JSON back to CSV, with quoted fields and automatic delimiter detection.",
+  "category": "developer",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "title": "CSV or JSON",
+        "maxLength": 500000,
+        "x-multiline": true,
+        "x-raw": true
+      },
+      "direction": {
+        "type": "string",
+        "enum": [
+          "csv-to-json",
+          "json-to-csv"
+        ],
+        "default": "csv-to-json",
+        "title": "Direction"
+      },
+      "convertNumbers": {
+        "type": "boolean",
+        "default": true,
+        "title": "Turn number-looking values into numbers"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  }
+}

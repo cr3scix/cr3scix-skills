@@ -1,0 +1,20 @@
+name: Bug report
+description: Something doesn't work as it should
+labels: [bug]
+body:
+  - type: input
+    id: tool
+    attributes:
+      label: Which tool?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: What did you do, what did you expect, and what happened?
+    validations:
+      required: true
+  - type: input
+    id: where
+    attributes:
+      label: Browser or MCP client, and where it runs (cr3scix.com, Docker, own hosting)

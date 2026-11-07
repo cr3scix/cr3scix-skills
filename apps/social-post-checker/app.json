@@ -1,0 +1,27 @@
+{
+  "name": "social-post-checker",
+  "title": "Social post checker",
+  "description": "Check a draft against the limits of X, LinkedIn, Instagram, Threads, Bluesky, Mastodon and more, and catch common problems before you post.",
+  "category": "marketing",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "text": {
+        "type": "string",
+        "title": "Draft",
+        "maxLength": 30000,
+        "x-multiline": true,
+        "x-raw": true
+      },
+      "platforms": {
+        "type": "string",
+        "title": "Platforms, comma separated (x, x-premium, linkedin, instagram, facebook, threads, bluesky, mastodon, tiktok, youtube, pinterest, gbp) or all",
+        "maxLength": 200,
+        "default": "all"
+      }
+    },
+    "required": [
+      "text"
+    ]
+  }
+}

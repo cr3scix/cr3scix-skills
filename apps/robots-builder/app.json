@@ -1,1 +1,60 @@
-{ "name": "robots-builder", "title": "AI crawler robots.txt builder", "description": "Choose which AI crawlers may read your site, add content signals and a sitemap, and copy a finished robots.txt.", "category": "agent" }
+{
+  "name": "robots-builder",
+  "title": "AI crawler robots.txt builder",
+  "description": "Choose which AI crawlers may read your site, add content signals and a sitemap, and copy a finished robots.txt.",
+  "category": "agent",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "policy": {
+        "type": "string",
+        "title": "AI crawler policy",
+        "enum": [
+          "allow-search-block-training",
+          "allow-all",
+          "block-all-ai"
+        ],
+        "default": "allow-search-block-training"
+      },
+      "search": {
+        "type": "string",
+        "enum": [
+          "yes",
+          "no"
+        ],
+        "default": "yes",
+        "title": "Content-Signal search"
+      },
+      "aiInput": {
+        "type": "string",
+        "enum": [
+          "yes",
+          "no"
+        ],
+        "default": "yes",
+        "title": "Content-Signal ai-input"
+      },
+      "aiTrain": {
+        "type": "string",
+        "enum": [
+          "yes",
+          "no"
+        ],
+        "default": "no",
+        "title": "Content-Signal ai-train"
+      },
+      "sitemap": {
+        "type": "string",
+        "title": "Sitemap URL",
+        "format": "url"
+      },
+      "disallowPaths": {
+        "type": "string",
+        "title": "Paths to block for everyone, one per line",
+        "maxLength": 2000,
+        "x-multiline": true
+      }
+    },
+    "required": []
+  }
+}

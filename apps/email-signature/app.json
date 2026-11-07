@@ -1,0 +1,55 @@
+{
+  "name": "email-signature",
+  "title": "Email signature maker",
+  "description": "Build a clean HTML email signature with your name, role, contact details and logo, ready to paste into Gmail or Outlook.",
+  "category": "business",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "maxLength": 100,
+        "title": "Full name"
+      },
+      "role": {
+        "type": "string",
+        "maxLength": 100,
+        "title": "Role"
+      },
+      "company": {
+        "type": "string",
+        "maxLength": 100,
+        "title": "Company"
+      },
+      "phone": {
+        "type": "string",
+        "maxLength": 40,
+        "title": "Phone"
+      },
+      "email": {
+        "type": "string",
+        "format": "email",
+        "title": "Email"
+      },
+      "website": {
+        "type": "string",
+        "maxLength": 200,
+        "title": "Website"
+      },
+      "logoUrl": {
+        "type": "string",
+        "format": "url",
+        "title": "Logo image URL (https)"
+      },
+      "color": {
+        "type": "string",
+        "maxLength": 7,
+        "default": "#0f766e",
+        "title": "Accent color (hex)"
+      }
+    },
+    "required": [
+      "name"
+    ]
+  }
+}

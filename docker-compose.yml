@@ -1,0 +1,14 @@
+services:
+  toolkit:
+    build: .
+    image: cr3scix/toolkit:latest
+    ports:
+      - "8080:80"
+    environment:
+      # Set to 0 to turn off the tools that fetch other websites
+      SKILLS_ENABLE_NETWORK: "1"
+      SKILLS_RATE_GENERAL: "60"
+      SKILLS_RATE_NETWORK: "10"
+      # SKILLS_BASE_URL: "https://tools.example.com"
+      # SKILLS_TRUST_CLOUDFLARE: "1"
+    restart: unless-stopped

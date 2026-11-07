@@ -80,7 +80,7 @@ final class Validator
                 if (!is_string($value) && !is_int($value) && !is_float($value)) {
                     return [null, "$name must be text"];
                 }
-                $value = trim((string) $value);
+                $value = empty($rule['x-raw']) ? trim((string) $value) : (string) $value;
                 $max = $rule['maxLength'] ?? 2000;
                 if (mb_strlen($value) > $max) {
                     return [null, "$name must be at most $max characters"];

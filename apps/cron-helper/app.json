@@ -1,0 +1,6 @@
+{
+  "name": "cron-helper",
+  "title": "Cron expression helper",
+  "description": "Explain a cron schedule in plain words and list the next times it will run.",
+  "category": "developer"
+}

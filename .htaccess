@@ -2,7 +2,7 @@
 RewriteEngine On
 
 # Never serve source, tests or skill folders directly
-RewriteRule ^(src|tests|skills|apps|agent-skills)(/|$) - [F,L]
+RewriteRule ^(src|tests|skills|apps|agent-skills|scripts|docs|locales)(/|$) - [F,L]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

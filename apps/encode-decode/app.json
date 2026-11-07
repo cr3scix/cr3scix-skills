@@ -1,1 +1,35 @@
-{ "name": "encode-decode", "title": "Encode, decode and JWT viewer", "description": "Base64, URL and HTML encoding in both directions, plus a viewer for the contents of a JWT.", "category": "developer" }
+{
+  "name": "encode-decode",
+  "title": "Encode, decode and JWT viewer",
+  "description": "Base64, URL and HTML encoding in both directions, plus a viewer for the contents of a JWT.",
+  "category": "developer",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "text": {
+        "type": "string",
+        "title": "Text",
+        "maxLength": 100000,
+        "x-multiline": true,
+        "x-raw": true
+      },
+      "operation": {
+        "type": "string",
+        "title": "Operation",
+        "enum": [
+          "base64-encode",
+          "base64-decode",
+          "url-encode",
+          "url-decode",
+          "html-escape",
+          "html-unescape",
+          "jwt-decode"
+        ]
+      }
+    },
+    "required": [
+      "text",
+      "operation"
+    ]
+  }
+}

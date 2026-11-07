@@ -1,0 +1,24 @@
+{
+  "name": "whatsapp-link",
+  "title": "WhatsApp click-to-chat link",
+  "description": "Make a wa.me link with a ready-typed message for your website, bio or QR code.",
+  "category": "business",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "phone": {
+        "type": "string",
+        "title": "Number with country code",
+        "maxLength": 30
+      },
+      "message": {
+        "type": "string",
+        "title": "Message",
+        "maxLength": 1000
+      }
+    },
+    "required": [
+      "phone"
+    ]
+  }
+}

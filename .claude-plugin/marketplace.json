@@ -1,0 +1,14 @@
+{
+  "name": "cr3scix",
+  "owner": { "name": "Cr3scix", "url": "https://cr3scix.com" },
+  "metadata": { "description": "Free tools and agent skills for small businesses, marketers and developers." },
+  "plugins": [
+    {
+      "name": "cr3scix-toolkit",
+      "source": "./agent-skills",
+      "description": "Social media skill for any brand on any platform: plan, write, repurpose, review and audit, with a post checker.",
+      "version": "1.0.0",
+      "category": "productivity"
+    }
+  ]
+}

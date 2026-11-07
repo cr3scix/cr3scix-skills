@@ -15,7 +15,7 @@ declare(strict_types=1);
  */
 final class SafeFetch
 {
-    public const USER_AGENT = 'Mozilla/5.0 (compatible; Cr3scixSkills/' . SKILLS_VERSION . '; +https://github.com/cr3scix/cr3scix-skills)';
+    public const USER_AGENT = 'Mozilla/5.0 (compatible; Cr3scixToolkit/' . SKILLS_VERSION . '; +https://github.com/cr3scix/toolkit)';
 
     /**
      * @param array<string,string> $headers extra request headers

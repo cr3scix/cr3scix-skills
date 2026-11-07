@@ -1,0 +1,25 @@
+{
+  "name": "timestamp-converter",
+  "title": "Timestamp converter",
+  "description": "Convert Unix timestamps to readable dates in any time zone, and dates back to timestamps.",
+  "category": "developer",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "value": {
+        "type": "string",
+        "title": "Unix seconds, milliseconds or a date",
+        "maxLength": 60
+      },
+      "zone": {
+        "type": "string",
+        "title": "Time zone (IANA name)",
+        "maxLength": 60,
+        "default": "UTC"
+      }
+    },
+    "required": [
+      "value"
+    ]
+  }
+}

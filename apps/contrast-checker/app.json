@@ -1,0 +1,25 @@
+{
+  "name": "contrast-checker",
+  "title": "Color contrast checker",
+  "description": "Check whether text and background colors are readable and pass WCAG AA and AAA.",
+  "category": "developer",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "foreground": {
+        "type": "string",
+        "title": "Text color (hex)",
+        "maxLength": 7
+      },
+      "background": {
+        "type": "string",
+        "title": "Background color (hex)",
+        "maxLength": 7
+      }
+    },
+    "required": [
+      "foreground",
+      "background"
+    ]
+  }
+}

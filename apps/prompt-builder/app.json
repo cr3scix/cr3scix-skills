@@ -1,1 +1,74 @@
-{ "name": "prompt-builder", "title": "Prompt builder", "description": "Build a clear, structured prompt for an AI assistant from a role, task, context and output format, with starter presets.", "category": "agent" }
+{
+  "name": "prompt-builder",
+  "title": "Prompt builder",
+  "description": "Build a clear, structured prompt for an AI assistant from a role, task, context and output format, with starter presets.",
+  "category": "agent",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "role": {
+        "type": "string",
+        "title": "Role",
+        "maxLength": 300
+      },
+      "task": {
+        "type": "string",
+        "title": "Task",
+        "maxLength": 2000
+      },
+      "context": {
+        "type": "string",
+        "title": "Context",
+        "maxLength": 4000
+      },
+      "input": {
+        "type": "string",
+        "title": "What will be pasted in",
+        "maxLength": 500
+      },
+      "steps": {
+        "type": "string",
+        "title": "Steps, one per line",
+        "maxLength": 3000
+      },
+      "rules": {
+        "type": "string",
+        "title": "Rules, one per line",
+        "maxLength": 3000
+      },
+      "example": {
+        "type": "string",
+        "title": "Example of a good answer",
+        "maxLength": 4000
+      },
+      "format": {
+        "type": "string",
+        "enum": [
+          "Short paragraphs",
+          "Bullet list",
+          "Table",
+          "Markdown report with headings",
+          "JSON",
+          "Numbered steps"
+        ],
+        "default": "Short paragraphs",
+        "title": "Output format"
+      },
+      "tone": {
+        "type": "string",
+        "enum": [
+          "Clear and friendly",
+          "Formal",
+          "Direct and brief",
+          "Warm and personal",
+          "Technical and precise"
+        ],
+        "default": "Clear and friendly",
+        "title": "Tone"
+      }
+    },
+    "required": [
+      "task"
+    ]
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "name": "loan-calculator",
+  "title": "Loan and EMI calculator",
+  "description": "Monthly instalment, total interest and a year-by-year schedule for any loan.",
+  "category": "business",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "principal": {
+        "type": "number",
+        "title": "Loan amount",
+        "minimum": 1,
+        "maximum": 10000000000000.0
+      },
+      "annualRatePercent": {
+        "type": "number",
+        "title": "Interest rate per year (%)",
+        "minimum": 0,
+        "maximum": 100
+      },
+      "months": {
+        "type": "integer",
+        "title": "Term in months",
+        "minimum": 1,
+        "maximum": 600
+      }
+    },
+    "required": [
+      "principal",
+      "annualRatePercent",
+      "months"
+    ]
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "name": "review-request",
+  "title": "Review request writer",
+  "description": "Write short, polite messages asking a happy customer for a review, for WhatsApp, SMS or email.",
+  "category": "business",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "business": {
+        "type": "string",
+        "title": "Business name",
+        "maxLength": 100
+      },
+      "customer": {
+        "type": "string",
+        "title": "Customer first name",
+        "maxLength": 60
+      },
+      "job": {
+        "type": "string",
+        "title": "What you did for them",
+        "maxLength": 150
+      },
+      "link": {
+        "type": "string",
+        "title": "Review link",
+        "format": "url"
+      },
+      "from": {
+        "type": "string",
+        "title": "Signed by",
+        "maxLength": 60
+      },
+      "channel": {
+        "type": "string",
+        "enum": [
+          "WhatsApp",
+          "SMS",
+          "Email"
+        ],
+        "default": "WhatsApp",
+        "title": "Channel"
+      }
+    },
+    "required": [
+      "business",
+      "link"
+    ]
+  }
+}

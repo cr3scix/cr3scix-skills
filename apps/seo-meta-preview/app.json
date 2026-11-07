@@ -1,1 +1,35 @@
-{ "name": "seo-meta-preview", "title": "SEO title and description preview", "description": "Check title and description length, preview the Google result and copy ready-made meta and social tags.", "category": "marketing" }
+{
+  "name": "seo-meta-preview",
+  "title": "SEO title and description preview",
+  "description": "Check title and description length, preview the Google result and copy ready-made meta and social tags.",
+  "category": "marketing",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "title": {
+        "type": "string",
+        "title": "Page title",
+        "maxLength": 300
+      },
+      "description": {
+        "type": "string",
+        "title": "Meta description",
+        "maxLength": 1000
+      },
+      "url": {
+        "type": "string",
+        "title": "Page URL",
+        "format": "url"
+      },
+      "imageUrl": {
+        "type": "string",
+        "title": "Social image URL",
+        "format": "url"
+      }
+    },
+    "required": [
+      "title",
+      "description"
+    ]
+  }
+}

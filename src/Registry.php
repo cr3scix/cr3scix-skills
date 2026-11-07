@@ -18,7 +18,10 @@ final class Registry
     /** @var array<string, array<string,mixed>> */
     private array $skills = [];
 
-    public function __construct(private string $dir)
+    /** @var array<string, string> handler file per skill */
+    private array $handlers = [];
+
+    public function __construct(private string $dir, ?string $appsDir = null)
     {
         foreach (glob($dir . '/*/skill.json') ?: [] as $file) {
             $def = json_decode((string) file_get_contents($file), true);
@@ -34,6 +37,22 @@ final class Registry
                 continue;
             }
             $this->skills[$folder] = $def;
+            $this->handlers[$folder] = dirname($file) . '/handler.php';
+        }
+        // Browser apps can ship a server twin (tool.php + inputSchema in app.json) so agents can use them too.
+        foreach ($appsDir ? (glob($appsDir . '/*/app.json') ?: []) : [] as $file) {
+            $def = json_decode((string) file_get_contents($file), true);
+            $folder = basename(dirname($file));
+            if (!is_array($def) || ($def['name'] ?? '') !== $folder || isset($this->skills[$folder])
+                || !preg_match('/^[a-z0-9]+(-[a-z0-9]+)*$/', $folder)
+                || !isset($def['title'], $def['description'], $def['category'], $def['inputSchema'])
+                || !isset(self::CATEGORIES[$def['category']])
+                || !is_file(dirname($file) . '/tool.php')) {
+                continue;
+            }
+            $def['app'] = true;
+            $this->skills[$folder] = $def;
+            $this->handlers[$folder] = dirname($file) . '/tool.php';
         }
         ksort($this->skills);
     }
@@ -65,7 +84,7 @@ final class Registry
         if ($errors) {
             return ['ok' => false, 'errors' => $errors];
         }
-        $handler = require $this->dir . '/' . $name . '/handler.php';
+        $handler = require $this->handlers[$name];
         try {
             return ['ok' => true, 'result' => $handler($clean)];
         } catch (RuntimeException $e) {

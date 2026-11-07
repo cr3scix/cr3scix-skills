@@ -1,5 +1,7 @@
 # Roadmap
 
+> **Update, v1.0 (November 2026):** renamed to Cr3scix Toolkit, stayed on PHP, focus on small businesses first. 31 tools, 26 usable by agents, Docker, CI and Tamil/Hindi interface are done. The Hostinger partner program is not being pursued for now. Remaining: public demo link, social media pack extras, launch.
+
 Where this project is going and why. Written November 2026.
 
 ## The idea in one line
@@ -41,18 +43,18 @@ Not yet good enough to get famous:
 ## Plan
 
 ### Phase 1: make it real (2 weeks)
-- [ ] Dockerfile and docker-compose.yml, tested, so it qualifies for the Hostinger deploy button
-- [ ] One tool definition for both worlds: each browser app gets a `run(input)` function that MCP can call too
+- [x] Dockerfile and docker-compose.yml, tested, so it qualifies for the Hostinger deploy button
+- [x] One tool definition for both worlds: each browser app gets a `run(input)` function that MCP can call too
 - [ ] Public demo at cr3scix.com/skills, linked at the top of the README
-- [ ] README rewrite: one-line promise, GIF, demo link, deploy buttons, "add a tool in 5 minutes"
-- [ ] Agent Skills folder installable with common skill installers, plus a Claude Code plugin manifest
-- [ ] CONTRIBUTING.md, issue templates, a "good first tool" list
+- [x] README rewrite: one-line promise, GIF, demo link, deploy buttons, "add a tool in 5 minutes"
+- [x] Agent Skills folder installable with common skill installers, plus a Claude Code plugin manifest
+- [x] CONTRIBUTING.md, issue templates, a "good first tool" list
 
 ### Phase 2: depth (weeks 3 to 6)
-- [ ] 30+ tools. Highest-demand gaps for small businesses: QR code maker, image resizer and compressor, PDF merge and split, proposal builder, email signature maker, WhatsApp link maker, review request message writer, meeting time zone planner
+- [x] 30+ tools (proposal builder still to do). Highest-demand gaps for small businesses: QR code maker, image resizer and compressor, PDF merge and split, proposal builder, email signature maker, WhatsApp link maker, review request message writer, meeting time zone planner
 - [ ] Social media pack built on the social-media skill: post checker app (same limits as the skill's checker), caption formatter, hashtag case fixer, carousel slide maker
-- [ ] Tests for every tool, run in CI on every pull request
-- [ ] Translations framework (Tamil and Hindi first, then community)
+- [x] Tests for every tool, run in CI on every pull request
+- [x] Translations framework (Tamil and Hindi first, then community)
 
 ### Phase 3: launch
 - [ ] Make the repo public, apply to the Hostinger open-source partner program, add the deploy button

@@ -1,0 +1,2 @@
+qrcode.js is qrcode-generator 1.4.4 by Kazuhiko Arase, MIT License.
+https://github.com/kazuhikoarase/qrcode-generator

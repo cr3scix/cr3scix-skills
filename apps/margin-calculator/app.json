@@ -1,1 +1,41 @@
-{ "name": "margin-calculator", "title": "Margin and break-even calculator", "description": "Work out margin, markup and profit from cost and price, the price a target margin needs, and how many sales cover your fixed costs.", "category": "business" }
+{
+  "name": "margin-calculator",
+  "title": "Margin and break-even calculator",
+  "description": "Work out margin, markup and profit from cost and price, the price a target margin needs, and how many sales cover your fixed costs.",
+  "category": "business",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "unitCost": {
+        "type": "number",
+        "title": "Cost per unit",
+        "minimum": 0,
+        "maximum": 1000000000000.0
+      },
+      "price": {
+        "type": "number",
+        "title": "Selling price per unit",
+        "minimum": 0,
+        "maximum": 1000000000000.0
+      },
+      "fixedCosts": {
+        "type": "number",
+        "title": "Fixed costs for the period",
+        "minimum": 0,
+        "maximum": 1000000000000000.0,
+        "default": 0
+      },
+      "targetMarginPercent": {
+        "type": "number",
+        "title": "Target margin (%)",
+        "minimum": 0,
+        "maximum": 99.9,
+        "default": 40
+      }
+    },
+    "required": [
+      "unitCost",
+      "price"
+    ]
+  }
+}

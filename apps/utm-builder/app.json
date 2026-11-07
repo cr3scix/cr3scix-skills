@@ -1,1 +1,47 @@
-{ "name": "utm-builder", "title": "UTM link builder", "description": "Add campaign tracking parameters to a link and copy the finished URL.", "category": "marketing" }
+{
+  "name": "utm-builder",
+  "title": "UTM link builder",
+  "description": "Add campaign tracking parameters to a link and copy the finished URL.",
+  "category": "marketing",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "url": {
+        "type": "string",
+        "title": "Page URL",
+        "format": "url"
+      },
+      "source": {
+        "type": "string",
+        "title": "Source",
+        "maxLength": 100
+      },
+      "medium": {
+        "type": "string",
+        "title": "Medium",
+        "maxLength": 100
+      },
+      "campaign": {
+        "type": "string",
+        "title": "Campaign",
+        "maxLength": 150
+      },
+      "term": {
+        "type": "string",
+        "title": "Term",
+        "maxLength": 150
+      },
+      "content": {
+        "type": "string",
+        "title": "Content",
+        "maxLength": 150
+      }
+    },
+    "required": [
+      "url",
+      "source",
+      "medium",
+      "campaign"
+    ]
+  }
+}
