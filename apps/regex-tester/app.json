@@ -1,1 +1,34 @@
-{ "name": "regex-tester", "title": "Regex tester", "description": "Try a regular expression against sample text and see every match and capture group highlighted.", "category": "developer" }
+{
+  "name": "regex-tester",
+  "title": "Regex tester",
+  "description": "Try a regular expression against sample text and see every match and capture group highlighted.",
+  "category": "developer",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "pattern": {
+        "type": "string",
+        "title": "Pattern",
+        "maxLength": 1000,
+        "x-raw": true
+      },
+      "flags": {
+        "type": "string",
+        "title": "Flags (i, m, s, u)",
+        "maxLength": 6,
+        "default": ""
+      },
+      "text": {
+        "type": "string",
+        "title": "Text",
+        "maxLength": 100000,
+        "x-multiline": true,
+        "x-raw": true
+      }
+    },
+    "required": [
+      "pattern",
+      "text"
+    ]
+  }
+}

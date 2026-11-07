@@ -1,0 +1,27 @@
+name: Tool request
+description: Suggest a new tool for the toolkit
+labels: [tool request]
+body:
+  - type: input
+    id: tool
+    attributes:
+      label: What should the tool do, in one sentence?
+    validations:
+      required: true
+  - type: textarea
+    id: who
+    attributes:
+      label: Who would use it, and what do they do today instead?
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options: [Business, Marketing and SEO, Developer, AI agent]
+  - type: checkboxes
+    id: help
+    attributes:
+      label: Want to build it?
+      options:
+        - label: I'd like to open a pull request for this

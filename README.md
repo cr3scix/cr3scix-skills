@@ -1,141 +1,150 @@
-# Cr3scix Skills
+<div align="center">
 
-An open-source dashboard of small, useful tools for businesses and developers. It has two kinds of tools:
+# Cr3scix Toolkit
 
-- **Interactive apps** run entirely in the visitor's browser (invoice maker, JSON formatter, SEO preview and more). Nothing is sent to the server.
-- **Skills** run on the server. Each one is also a REST endpoint and an MCP tool, so an AI assistant can use them too.
+**31 free tools for small businesses, marketers and developers.<br>Use them in your browser, or let your AI assistant use them too.**
 
-It is a plain PHP app with no database and no build step, so it runs on ordinary shared hosting.
+[**Try it live**](https://cr3scix.com/skills/) · [Self-host with Docker](#self-host) · [Connect your AI assistant](#for-ai-agents) · [Add a tool](CONTRIBUTING.md)
 
-## What is in the box
+No sign-up. No tracking. Browser tools never send your files or text anywhere.
 
-**Interactive apps**
+![Cr3scix Toolkit demo](docs/img/demo.gif)
 
-| App | Category |
-| --- | --- |
-| Invoice and quote maker (print or save as PDF) | Business |
-| Margin and break-even calculator | Business |
-| SEO title and description preview | Marketing and SEO |
-| UTM link builder | Marketing and SEO |
-| Text toolkit (counts, case, slugs, line cleanup) | Marketing and SEO |
-| JSON formatter and validator | Developer |
-| Regex tester | Developer |
-| Encode, decode and JWT viewer | Developer |
-| ID and password generator | Developer |
-| Prompt builder | AI agent |
-| AI crawler robots.txt builder | AI agent |
+</div>
 
-**Skills (browser, REST and MCP)**
+## Why this exists
 
-| Skill | Category | What it does |
-| --- | --- | --- |
-| Agent readiness check | AI agent | Scores a website out of 100 on how easy it is for AI agents to read, with a fix for each failed check |
-| llms.txt generator | AI agent | Reads a sitemap and drafts an `llms.txt` file |
-| Manual work estimator | Business | Turns hours of repetitive work into a yearly cost and a realistic automation saving |
-| JSON-LD business generator | Developer | Builds schema.org markup for an organization or local business |
+Tool collections like it-tools are made for people. Agent skill collections are made for AI. Real work needs both: you check a post yourself on Monday, and on Tuesday your assistant checks fifty of them.
 
-## One app, three ways in
+So every tool here works two ways:
 
-- **Dashboard** at `/`: sidebar, search, favorites, recent runs, readable results.
-- **REST API**: `POST /api/skills/<name>` with a JSON body. `GET /api/skills` lists everything.
-- **MCP**: every skill is a tool at `/mcp` (Streamable HTTP), with a server card at `/.well-known/mcp/server-card.json`. `/llms.txt` is generated from the installed skills.
+- **For you:** a clean page in the dashboard. Fill in a form, get a result, copy or download it.
+- **For your AI assistant:** the same tool over [MCP](#for-ai-agents) and a REST API, giving the same answer. 26 of the 31 tools are AI-ready today.
+
+It is plain PHP with no database and no build step, so it runs on almost any web host, or in Docker.
+
+## The tools
+
+**Business**
+
+| Tool | What it does | AI-ready |
+| --- | --- | :---: |
+| Invoice and quote maker | Line items and tax, print or save as PDF | ✓ |
+| GST calculator (India) | Add or remove GST, with the CGST, SGST or IGST split | ✓ |
+| Loan and EMI calculator | Monthly payment, total interest, year-by-year schedule | ✓ |
+| Margin and break-even calculator | Margin, markup and units to break even | ✓ |
+| Manual work estimator | What repetitive work costs a year, and what automation could save | ✓ |
+| Review request writer | Polite messages asking happy customers for a review | ✓ |
+| WhatsApp click-to-chat link | wa.me links with a ready-typed message | ✓ |
+| Email signature maker | Clean HTML signatures for Gmail and Outlook | ✓ |
+| Meeting time zone planner | One time across cities, with working-hours check | ✓ |
+| QR code maker | Links, Wi-Fi and phone numbers as PNG or SVG | |
+| PDF merge and split | Combine PDFs or pull out pages, in your browser | |
+
+**Marketing and SEO**
+
+| Tool | What it does | AI-ready |
+| --- | --- | :---: |
+| Social post checker | Limits for X, LinkedIn, Instagram, Threads, Bluesky, Mastodon and more, plus AI-sounding phrases | ✓ |
+| SEO title and description preview | Length check, Google preview, ready-made meta and social tags | ✓ |
+| UTM link builder | Campaign tracking links that keep reports clean | ✓ |
+| Text toolkit | Word counts, reading time, case, slugs, line cleanup | ✓ |
+| Carousel slide maker | Plain text to Instagram or LinkedIn slides | |
+| Image resizer and compressor | Social sizes, crop, compress, in your browser | |
+
+**Developer**
+
+| Tool | What it does | AI-ready |
+| --- | --- | :---: |
+| JSON formatter and validator | Format, minify, sort keys, validate | ✓ |
+| CSV and JSON converter | Both directions, quoted fields, spreadsheet-safe output | ✓ |
+| Regex tester | Matches and groups, highlighted | ✓ |
+| Encode, decode and JWT viewer | Base64, URL, HTML, and JWT contents | ✓ |
+| ID and password generator | UUIDs, passwords and tokens from a secure random source | ✓ |
+| Timestamp converter | Unix time to dates in any zone, and back | ✓ |
+| Text diff | Line-by-line differences | ✓ |
+| Color contrast checker | WCAG AA and AAA results | ✓ |
+| JSON-LD business generator | schema.org markup for a business | ✓ |
+| Cron expression helper | Plain-words meaning and the next run times | |
+
+**AI agents and websites**
+
+| Tool | What it does | AI-ready |
+| --- | --- | :---: |
+| Agent readiness check | Scores how easy a website is for AI agents to use, with a fix for every failed check | ✓ |
+| llms.txt generator | Drafts an llms.txt from your sitemap | ✓ |
+| AI crawler robots.txt builder | Choose which AI crawlers may read your site, with content signals | ✓ |
+| Prompt builder | Clear, structured prompts from a role, task and format | ✓ |
+
+<p align="center">
+  <img src="docs/img/post-checker.png" width="49%" alt="Social post checker showing limits for X, LinkedIn, Instagram, Threads and Bluesky">
+  <img src="docs/img/qr-dark.png" width="49%" alt="QR code maker in dark mode">
+</p>
+
+## For AI agents
+
+**MCP:** add `https://cr3scix.com/skills/mcp` (or your own copy's `/mcp`) as a remote MCP server in any client that supports Streamable HTTP. Every AI-ready tool shows up as a tool. A server card lives at `/.well-known/mcp/server-card.json` and an index at `/llms.txt`.
+
+**REST:**
 
 ```bash
-curl -X POST https://your-site/api/skills/manual-work-estimator \
+curl -X POST https://cr3scix.com/skills/api/skills/gst-calculator \
   -H "Content-Type: application/json" \
-  -d '{"teamSize":4,"hoursPerWeekEach":5,"hourlyCost":30}'
+  -d '{"amount": 1180, "mode": "remove"}'
 ```
 
-## Install
+`GET /api/skills` lists every tool with its input schema.
 
-Requirements: PHP 8.1 or newer with the `curl` and `json` extensions.
+**Agent Skills:** [`agent-skills/`](agent-skills/) holds portable skills in the open [Agent Skills format](https://agentskills.io/specification). The first is [`social-media`](agent-skills/skills/social-media/SKILL.md): plan, write, repurpose, review and audit posts for any brand on 12 platforms, with a post checker. In Claude Code:
 
-**On Hostinger (or any Apache/LiteSpeed host):** upload the files, or connect this repository through Git deploy. Point the domain at the folder. Nothing else is needed.
+```
+/plugin marketplace add cr3scix/toolkit
+/plugin install cr3scix-toolkit@cr3scix
+```
 
-**Locally:**
+Or copy the folder into your agent's skills directory.
+
+## Self-host
+
+**Docker:**
 
 ```bash
-php -S 127.0.0.1:8080 index.php
+git clone https://github.com/cr3scix/toolkit.git && cd toolkit
+docker compose up -d
+# open http://localhost:8080
 ```
 
-Then open http://127.0.0.1:8080. Run the tests with `php tests/run.php`.
+**Any PHP host** (PHP 8.1+ with curl and mbstring): upload the folder or connect the repo with your host's Git deploy. Apache and LiteSpeed use the included `.htaccess`. Works in a subfolder too.
 
-Optional settings go in environment variables or a `config.php` copied from `config.example.php`.
+**Locally:** `php -S 127.0.0.1:8080 index.php`
 
 | Setting | Default | Meaning |
 | --- | --- | --- |
-| `SKILLS_ENABLE_NETWORK` | on | Turn off skills that fetch web pages |
+| `SKILLS_ENABLE_NETWORK` | on | Turn off the tools that fetch other websites |
 | `SKILLS_RATE_GENERAL` | 60 | Requests per minute per visitor |
-| `SKILLS_RATE_NETWORK` | 10 | Web-fetching runs per minute per visitor |
-| `SKILLS_TRUST_CLOUDFLARE` | off | Use `CF-Connecting-IP` for rate limits when behind Cloudflare |
+| `SKILLS_RATE_NETWORK` | 10 | Website-fetching runs per minute per visitor |
+| `SKILLS_TRUST_CLOUDFLARE` | off | Use the real visitor IP for rate limits behind Cloudflare |
+| `SKILLS_BASE_URL` | auto | Public address, if auto-detection gets it wrong |
 
-## A note on safety
+Set these as environment variables or in `config.php` (copy `config.example.php`).
 
-Skills that fetch web pages only reach public sites. Private, loopback and link-local addresses are refused, redirects are checked at every hop, responses are size-capped, and runs are rate limited. If you deploy this publicly and do not want visitors triggering outbound requests from your server, set `SKILLS_ENABLE_NETWORK=0`.
+## Privacy and safety
 
-The app stores nothing about visitors. Favorites and recent runs live in the visitor's own browser.
+- Browser tools run entirely on your device. Files you resize, merge or convert are never uploaded.
+- The server stores nothing about visitors. Favorites and recent runs stay in your own browser.
+- Tools that fetch websites can only reach public addresses, check every redirect, cap response sizes and are rate limited. Set `SKILLS_ENABLE_NETWORK=0` if you don't want visitors triggering outbound requests from your server.
+- Report security problems privately: see [SECURITY.md](SECURITY.md).
 
-## Add your own interactive app
+## Languages
 
-Create `apps/my-app/app.json` with `name`, `title`, `description` and `category` (`agent`, `business`, `marketing` or `developer`), and `apps/my-app/app.js`:
+The interface is available in English, தமிழ் and हिन्दी. Tamil and Hindi were drafted by AI and need native review; [corrections welcome](CONTRIBUTING.md#translations).
 
-```js
-CS.apps['my-app'] = function (root) {
-  var el = CS.el;
-  var input = CS.inp('text', '', function (value) { out.set(value.toUpperCase()); });
-  var out = CS.out('');
-  CS.add(root, 'Type something', input);
-  root.appendChild(out);
-};
-```
+## Contributing
 
-Helpers available on `CS`: `el`, `inp`, `area`, `sel`, `add`, `out` (a result box with a copy button), `copyBtn`, `value` (renders data as a table or list) and `money`. Keep apps free of outside requests so they stay private.
-
-## Add your own skill
-
-Create a folder in `skills/`. The folder name is the skill name (lowercase, dashes).
-
-`skills/my-skill/skill.json`
-
-```json
-{
-  "name": "my-skill",
-  "title": "My skill",
-  "description": "One or two sentences on what it does.",
-  "category": "business",
-  "inputSchema": {
-    "type": "object",
-    "properties": {
-      "text": { "type": "string", "title": "Text", "maxLength": 2000 }
-    },
-    "required": ["text"]
-  }
-}
-```
-
-`skills/my-skill/handler.php`
-
-```php
-<?php
-return function (array $input): array {
-    return ['length' => strlen($input['text'])];
-};
-```
-
-That is all. The skill appears in the dashboard, the REST API, MCP and `llms.txt` automatically. Categories are `agent`, `business` and `developer`. Add `"network": true` if the skill fetches web pages, and use `SafeFetch::get()` for that, never raw `curl`. Throw a `RuntimeException` with a friendly message for problems the user can fix.
-
-Supported input types: `string`, `integer`, `number`, `boolean`, with `enum`, `default`, `minimum`, `maximum`, `maxLength`, and `format` of `url` or `email`. Add `"x-multiline": true` for a text area.
-
-## Layout
-
-```
-index.php        routes: dashboard, API, MCP, discovery files
-src/             registry, validation, MCP server, safe fetcher, dashboard page
-skills/          one folder per server-side skill
-apps/            one folder per browser app
-tests/run.php    dependency-free test suite
-```
+A new tool is one folder. `php scripts/new-app.php my-tool "My tool" business --agent` scaffolds it. See [CONTRIBUTING.md](CONTRIBUTING.md), and the [roadmap](ROADMAP.md) for what's next.
 
 ## License
 
-MIT
+MIT. Bundled libraries keep their own licenses: [qrcode-generator](apps/qr-code/vendor/LICENSE.md) and [pdf-lib](apps/pdf-tools/vendor/LICENSE.md), both MIT.
+
+Made by [Cr3scix](https://cr3scix.com) in Chennai.

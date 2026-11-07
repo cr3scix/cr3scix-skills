@@ -1,0 +1,45 @@
+{
+  "name": "gst-calculator",
+  "title": "GST calculator (India)",
+  "description": "Add or remove GST at any rate and see the CGST, SGST or IGST split.",
+  "category": "business",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "amount": {
+        "type": "number",
+        "title": "Amount",
+        "minimum": 0,
+        "maximum": 10000000000000.0
+      },
+      "ratePercent": {
+        "type": "number",
+        "title": "GST rate (%)",
+        "minimum": 0,
+        "maximum": 100,
+        "default": 18
+      },
+      "mode": {
+        "type": "string",
+        "enum": [
+          "add",
+          "remove"
+        ],
+        "default": "add",
+        "title": "add = amount is before GST, remove = amount includes GST"
+      },
+      "supply": {
+        "type": "string",
+        "enum": [
+          "intra",
+          "inter"
+        ],
+        "default": "intra",
+        "title": "intra = same state (CGST+SGST), inter = IGST"
+      }
+    },
+    "required": [
+      "amount"
+    ]
+  }
+}

@@ -81,7 +81,7 @@ final class Http
         if ($limit <= 0) {
             return true;
         }
-        $dir = sys_get_temp_dir() . '/cr3scix-skills-rl';
+        $dir = sys_get_temp_dir() . '/cr3scix-toolkit-rl';
         if (!is_dir($dir) && !@mkdir($dir, 0700, true) && !is_dir($dir)) {
             return true; // fail open rather than break the app
         }

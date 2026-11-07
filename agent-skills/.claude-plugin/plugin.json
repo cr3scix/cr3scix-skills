@@ -1,0 +1,10 @@
+{
+  "name": "cr3scix-toolkit",
+  "version": "1.0.0",
+  "description": "Agent skills from Cr3scix Toolkit: a vendor-neutral social media skill for any brand and any platform, with a post checker.",
+  "author": { "name": "Cr3scix", "url": "https://cr3scix.com" },
+  "homepage": "https://github.com/cr3scix/toolkit",
+  "repository": "https://github.com/cr3scix/toolkit",
+  "license": "MIT",
+  "keywords": ["social-media", "content", "linkedin", "instagram", "bluesky", "mastodon", "small-business"]
+}

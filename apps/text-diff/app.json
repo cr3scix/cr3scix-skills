@@ -1,0 +1,29 @@
+{
+  "name": "text-diff",
+  "title": "Text diff",
+  "description": "Compare two versions of a text line by line and see exactly what changed.",
+  "category": "developer",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "original": {
+        "type": "string",
+        "title": "Original",
+        "maxLength": 200000,
+        "x-multiline": true,
+        "x-raw": true
+      },
+      "changed": {
+        "type": "string",
+        "title": "Changed",
+        "maxLength": 200000,
+        "x-multiline": true,
+        "x-raw": true
+      }
+    },
+    "required": [
+      "original",
+      "changed"
+    ]
+  }
+}

@@ -30,8 +30,8 @@ final class Mcp
                 return self::ok($id, [
                     'protocolVersion' => $version,
                     'capabilities' => ['tools' => ['listChanged' => false]],
-                    'serverInfo' => ['name' => 'cr3scix-skills', 'title' => 'Cr3scix Skills', 'version' => SKILLS_VERSION],
-                    'instructions' => 'Each tool is a self-contained skill. Tools that fetch web pages only reach public sites.',
+                    'serverInfo' => ['name' => 'cr3scix-toolkit', 'title' => 'Cr3scix Toolkit', 'version' => SKILLS_VERSION],
+                    'instructions' => 'Each tool is self-contained and safe to call repeatedly. Tools that fetch web pages only reach public sites.',
                 ]);
             case 'ping':
                 return self::ok($id, new stdClass());
@@ -90,10 +90,10 @@ final class Mcp
             '$schema' => 'https://static.modelcontextprotocol.io/schemas/mcp-server-card/v1.json',
             'version' => '1.0',
             'protocolVersion' => self::SUPPORTED_VERSIONS[0],
-            'name' => 'cr3scix-skills',
-            'title' => 'Cr3scix Skills',
-            'description' => 'Open-source collection of skills for businesses and developers, exposed as MCP tools.',
-            'serverInfo' => ['name' => 'cr3scix-skills', 'title' => 'Cr3scix Skills', 'version' => SKILLS_VERSION],
+            'name' => 'cr3scix-toolkit',
+            'title' => 'Cr3scix Toolkit',
+            'description' => 'Free, open-source tools for small businesses, marketers and developers, usable by people in the browser and by AI agents over MCP.',
+            'serverInfo' => ['name' => 'cr3scix-toolkit', 'title' => 'Cr3scix Toolkit', 'version' => SKILLS_VERSION],
             'endpoint' => $baseUrl . '/mcp',
             'transport' => ['type' => 'streamable-http', 'endpoint' => $baseUrl . '/mcp'],
             'capabilities' => ['tools' => ['listChanged' => false]],

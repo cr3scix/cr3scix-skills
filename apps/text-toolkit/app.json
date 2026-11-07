@@ -1,1 +1,37 @@
-{ "name": "text-toolkit", "title": "Text toolkit", "description": "Count words, estimate reading time, change case, make slugs, and clean up lists of lines.", "category": "marketing" }
+{
+  "name": "text-toolkit",
+  "title": "Text toolkit",
+  "description": "Count words, estimate reading time, change case, make slugs, and clean up lists of lines.",
+  "category": "marketing",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "text": {
+        "type": "string",
+        "title": "Text",
+        "maxLength": 100000,
+        "x-multiline": true,
+        "x-raw": true
+      },
+      "transform": {
+        "type": "string",
+        "title": "Transform",
+        "enum": [
+          "none",
+          "upper",
+          "lower",
+          "title",
+          "sentence",
+          "slug",
+          "tidy",
+          "dedupe-lines",
+          "sort-lines"
+        ],
+        "default": "none"
+      }
+    },
+    "required": [
+      "text"
+    ]
+  }
+}

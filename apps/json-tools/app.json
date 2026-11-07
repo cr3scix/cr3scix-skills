@@ -1,1 +1,39 @@
-{ "name": "json-tools", "title": "JSON formatter and validator", "description": "Format, minify, sort and validate JSON, with the line and column of any error.", "category": "developer" }
+{
+  "name": "json-tools",
+  "title": "JSON formatter and validator",
+  "description": "Format, minify, sort and validate JSON, with the line and column of any error.",
+  "category": "developer",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "json": {
+        "type": "string",
+        "title": "JSON",
+        "maxLength": 200000,
+        "x-multiline": true,
+        "x-raw": true
+      },
+      "action": {
+        "type": "string",
+        "title": "Action",
+        "enum": [
+          "format",
+          "minify",
+          "sort",
+          "validate"
+        ],
+        "default": "format"
+      },
+      "indent": {
+        "type": "integer",
+        "title": "Indent spaces",
+        "minimum": 0,
+        "maximum": 8,
+        "default": 2
+      }
+    },
+    "required": [
+      "json"
+    ]
+  }
+}

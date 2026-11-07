@@ -1,0 +1,31 @@
+{
+  "name": "timezone-planner",
+  "title": "Meeting time zone planner",
+  "description": "See one meeting time across several cities and spot the hours that work for everyone.",
+  "category": "business",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "baseZone": {
+        "type": "string",
+        "title": "Base time zone (IANA name)",
+        "maxLength": 60,
+        "default": "UTC"
+      },
+      "dateTime": {
+        "type": "string",
+        "title": "Local date and time, YYYY-MM-DD HH:MM",
+        "maxLength": 20
+      },
+      "zones": {
+        "type": "string",
+        "title": "Other zones, comma or newline separated",
+        "maxLength": 1000
+      }
+    },
+    "required": [
+      "dateTime",
+      "zones"
+    ]
+  }
+}

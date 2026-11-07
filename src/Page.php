@@ -10,9 +10,9 @@ final class Page
 
     public static function llms(Registry $registry, string $base, ?Apps $apps = null): string
     {
-        $out = "# Cr3scix Skills\n\n> Open-source collection of skills for businesses and developers. Every skill is available in a web catalog, as a REST endpoint and as an MCP tool.\n\n";
+        $out = "# Cr3scix Toolkit\n\n> Free, open-source tools for small businesses, marketers and developers. Every tool works in the browser, and AI-ready tools are also REST endpoints and MCP tools.\n\n";
         foreach (Registry::CATEGORIES as $key => $label) {
-            $items = array_filter($registry->all(), fn($d) => $d['category'] === $key);
+            $items = array_filter($registry->all(), fn($d) => $d['category'] === $key && empty($d['app']));
             if (!$items) {
                 continue;
             }
@@ -25,7 +25,8 @@ final class Page
         if ($apps && $apps->all()) {
             $out .= "## Interactive apps (browser tools)\n\n";
             foreach ($apps->all() as $name => $def) {
-                $out .= "- [{$def['title']}]($base/#/app/$name): {$def['description']}\n";
+                $agent = $registry->get($name) ? " Also an MCP tool and REST endpoint: $base/api/skills/$name" : '';
+                $out .= "- [{$def['title']}]($base/#/app/$name): {$def['description']}$agent\n";
             }
             $out .= "\n";
         }
@@ -39,6 +40,9 @@ final class Page
     {
         $skills = [];
         foreach ($registry->all() as $name => $def) {
+            if (!empty($def['app'])) {
+                continue; // shown as an app, with an agent badge
+            }
             $skills[] = [
                 'name' => $name,
                 'title' => $def['title'],
@@ -51,9 +55,16 @@ final class Page
         $flags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE;
         $appList = [];
         foreach ($apps ? $apps->all() : [] as $name => $def) {
-            $appList[] = ['name' => $name, 'title' => $def['title'], 'description' => $def['description'], 'category' => $def['category']];
+            $appList[] = ['name' => $name, 'title' => $def['title'], 'description' => $def['description'], 'category' => $def['category'], 'agent' => (bool) ($registry->get($name)['app'] ?? false)];
         }
-        $data = json_encode(['skills' => $skills, 'apps' => $appList, 'categories' => Registry::CATEGORIES, 'base' => $base, 'version' => SKILLS_VERSION], $flags);
+        $i18n = [];
+        foreach (glob(dirname(__DIR__) . '/locales/*.json') ?: [] as $lf) {
+            $strings = json_decode((string) file_get_contents($lf), true);
+            if (is_array($strings) && preg_match('/^[a-z]{2,3}(-[A-Z]{2})?$/', basename($lf, '.json'))) {
+                $i18n[basename($lf, '.json')] = $strings;
+            }
+        }
+        $data = json_encode(['i18n' => $i18n, 'skills' => $skills, 'apps' => $appList, 'categories' => Registry::CATEGORIES, 'base' => $base, 'version' => SKILLS_VERSION], $flags);
         return str_replace(['{{DATA}}', '{{BASE}}'], [$data, self::e($base)], self::TEMPLATE);
     }
 
@@ -63,7 +74,7 @@ final class Page
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cr3scix Skills</title>
+<title>Cr3scix Toolkit</title>
 <meta name="description" content="A dashboard of open-source skills for businesses and developers. Run them here, call them over an API, or connect them to an AI tool through MCP.">
 <link rel="alternate" type="text/plain" href="{{BASE}}/llms.txt">
 <style>
@@ -105,6 +116,7 @@ label{display:block;font-size:.84rem;margin:12px 0 4px;font-weight:600}
 label:first-child{margin-top:0}
 input,select,textarea{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg);font:inherit}
 input[type=checkbox]{width:auto}
+input[type=color]{padding:3px;height:42px;cursor:pointer}
 textarea{min-height:90px;resize:vertical}
 .hint{font-size:.78rem;color:var(--muted);margin-top:2px}
 .btn{padding:9px 16px;border:0;border-radius:999px;background:var(--accent);color:var(--accent-fg);font-weight:600}
@@ -153,7 +165,7 @@ mark{background:var(--warnbg);color:inherit;border-radius:3px;padding:0 1px}
 </style>
 </head>
 <body>
-<div class="topbar"><a class="brand" href="#/" style="padding:0"><span class="logo">C</span>Cr3scix Skills</a><button class="btn ghost" id="menu" aria-expanded="false">Menu</button></div>
+<div class="topbar"><a class="brand" href="#/" style="padding:0"><span class="logo">C</span>Cr3scix Toolkit</a><button class="btn ghost" id="menu" aria-expanded="false">Menu</button></div>
 <div class="app">
 <aside id="side"></aside>
 <main id="main" tabindex="-1"></main>
@@ -172,6 +184,10 @@ function matches(x, q){ return !q || (x.title + ' ' + x.description + ' ' + x.na
 var side = document.getElementById('side'), main = document.getElementById('main');
 var query = '';
 
+var lang = (function(){ try { return localStorage.getItem('cs.lang') || ''; } catch (e) { return ''; } })();
+if (!D.i18n[lang]) { var nav0 = (navigator.language || 'en').slice(0, 2); lang = D.i18n[nav0] ? nav0 : 'en'; }
+function t(s){ return (lang !== 'en' && D.i18n[lang] && D.i18n[lang][s]) || s; }
+document.documentElement.lang = lang;
 function store(k, v){ try { if (v === undefined) { return JSON.parse(localStorage.getItem('cs.' + k) || 'null'); } localStorage.setItem('cs.' + k, JSON.stringify(v)); } catch (e) { return null; } }
 var favs = store('fav') || [];
 var hist = store('hist') || [];
@@ -193,34 +209,43 @@ CS.area = function(val, on, rows, ph){ var t = el('textarea', {rows: String(rows
 CS.sel = function(opts, val, on){ var s = el('select'); opts.forEach(function(o){ var v = Array.isArray(o) ? o[0] : o, l = Array.isArray(o) ? o[1] : o; var op = el('option', {value: v, text: l}); if (String(v) === String(val)) op.selected = true; s.appendChild(op); }); if (on) s.addEventListener('change', function(){ on(s.value); }); return s; };
 CS.add = function(parent, label, ctl, hint){ parent.appendChild(el('label', {text: label})); parent.appendChild(ctl); if (hint) parent.appendChild(el('div', {class: 'hint', text: hint})); return ctl; };
 CS.out = function(text){ var pre = el('pre', {text: text || ''}); var box = el('div', {class: 'code has-btn'}, [CS.copyBtn('Copy', ''), pre]); var btn = box.firstChild; btn.onclick = null; var fresh = btn.cloneNode(true); box.replaceChild(fresh, btn); fresh.addEventListener('click', function(){ var done = function(){ fresh.textContent = 'Copied'; setTimeout(function(){ fresh.textContent = 'Copy'; }, 1400); }; if (navigator.clipboard) navigator.clipboard.writeText(pre.textContent).then(done, function(){ fresh.textContent = 'Press Ctrl+C'; }); }); box.set = function(t){ pre.textContent = t; }; return box; };
+CS.load = function(app, file){ var key = app + '/' + file; if (!CS._loads) CS._loads = {}; if (!CS._loads[key]) CS._loads[key] = new Promise(function(ok, fail){ var s = el('script', {src: D.base + '/apps/' + app + '/vendor/' + file}); s.onload = ok; s.onerror = function(){ delete CS._loads[key]; fail(new Error('Could not load ' + file)); }; document.head.appendChild(s); }); return CS._loads[key]; };
+CS.download = function(name, blob){ var a = el('a', {href: URL.createObjectURL(blob), download: name}); document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000); };
 CS.money = function(n, cur){ return (cur || '') + (Number(n) || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}); };
 
 /* ---------- sidebar ---------- */
 function renderSide(){
   var r = route();
   side.textContent = '';
-  side.appendChild(el('a', {class:'brand', href:'#/'}, [el('span', {class:'logo', text:'C'}), 'Cr3scix Skills']));
-  var s = el('input', {class:'search', type:'search', placeholder:'Search skills', 'aria-label':'Search skills', value: query});
+  side.appendChild(el('a', {class:'brand', href:'#/'}, [el('span', {class:'logo', text:'C'}), 'Cr3scix Toolkit']));
+  var s = el('input', {class:'search', type:'search', placeholder:t('Search tools'), 'aria-label':t('Search tools'), value: query});
   s.addEventListener('input', function(){ query = s.value; renderSide(); var c = side.querySelector('.search'); c.focus(); c.setSelectionRange(query.length, query.length); });
   side.appendChild(s);
   var nav = el('nav', {class:'nav'});
-  nav.appendChild(link('#/', 'Overview', r.page === 'home'));
+  nav.appendChild(link('#/', t('Overview'), r.page === 'home'));
   var q = query.trim().toLowerCase();
   if (favs.length && !q) {
     var fl = favs.map(byKey).filter(Boolean);
-    if (fl.length) { nav.appendChild(el('h4', {text:'Favorites'})); fl.forEach(function(x){ nav.appendChild(link('#/' + x.kind + '/' + x.name, x.title, r.page === x.kind && r.arg === x.name, '\u2605')); }); }
+    if (fl.length) { nav.appendChild(el('h4', {text:t('Favorites')})); fl.forEach(function(x){ nav.appendChild(link('#/' + x.kind + '/' + x.name, x.title, r.page === x.kind && r.arg === x.name, '\u2605')); }); }
   }
   Object.keys(D.categories).forEach(function(cat){
     var items = ALL.filter(function(x){ return x.category === cat && matches(x, q); });
     if (!items.length) return;
-    nav.appendChild(el('h4', {text:D.categories[cat]}));
+    nav.appendChild(el('h4', {text:t(D.categories[cat])}));
     items.forEach(function(x){ nav.appendChild(link('#/' + x.kind + '/' + x.name, x.title, r.page === x.kind && r.arg === x.name)); });
   });
-  if (q && !ALL.some(function(x){ return matches(x, q); })) nav.appendChild(el('p', {class:'hint', text:'Nothing matches that search.', style:'padding:8px 10px'}));
-  nav.appendChild(el('h4', {text:'Workspace'}));
-  nav.appendChild(link('#/history', 'Recent runs', r.page === 'history'));
-  nav.appendChild(link('#/connect', 'Connect and API', r.page === 'connect'));
+  if (q && !ALL.some(function(x){ return matches(x, q); })) nav.appendChild(el('p', {class:'hint', text:t('Nothing matches that search.'), style:'padding:8px 10px'}));
+  nav.appendChild(el('h4', {text:t('Workspace')}));
+  nav.appendChild(link('#/history', t('Recent runs'), r.page === 'history'));
+  nav.appendChild(link('#/connect', t('Connect and API'), r.page === 'connect'));
   side.appendChild(nav);
+  if (Object.keys(D.i18n).length) {
+    var opts = [['en', 'English']].concat(Object.keys(D.i18n).map(function(k){ return [k, D.i18n[k]._name || k]; }));
+    var ls = el('select', {'aria-label': t('Language'), style:'margin:16px 0 0;font-size:.85rem'});
+    opts.forEach(function(o){ var op = el('option', {value:o[0], text:o[1]}); if (o[0] === lang) op.selected = true; ls.appendChild(op); });
+    ls.addEventListener('change', function(){ lang = ls.value; try { localStorage.setItem('cs.lang', lang); } catch (e) {} document.documentElement.lang = lang; render(); });
+    side.appendChild(ls);
+  }
   side.appendChild(el('p', {class:'hint', text:'v' + D.version + ' · open source', style:'padding:14px 10px 0'}));
 }
 function link(href, text, on, extra){
@@ -233,23 +258,23 @@ function link(href, text, on, extra){
 /* ---------- pages ---------- */
 function home(){
   main.textContent = '';
-  main.appendChild(el('h1', {text:'Your skills hub'}));
-  main.appendChild(el('p', {class:'lead', text:'Interactive tools you can use right here, plus skills that run on the server. Every skill is also available over a REST API and as an MCP tool, so the same work can run inside your AI assistant.'}));
+  main.appendChild(el('h1', {text:'Cr3scix Toolkit'}));
+  main.appendChild(el('p', {class:'lead', text:t('Free tools for small businesses, marketers and developers. Use them right here in your browser, or let your AI assistant use the same tools through MCP. No sign-up, no tracking.')}));
   var net = D.skills.filter(function(s){ return s.network; }).length;
   main.appendChild(el('div', {class:'stats'}, [
-    stat((D.apps || []).length, 'interactive apps'), stat(D.skills.length, 'skills with API and MCP'), stat(Object.keys(D.categories).length, 'categories'), stat(hist.length, 'skill runs on this device')
+    stat(ALL.length, t('tools')), stat(D.skills.length + (D.apps || []).filter(function(a){ return a.agent; }).length, t('ready for AI agents')), stat(Object.keys(D.categories).length, t('categories')), stat((D.apps || []).length, t('run fully in your browser'))
   ]));
   if (hist.length) {
-    main.appendChild(el('h2', {text:'Pick up where you left off'}));
-    var t = el('div', {class:'tiles'});
+    main.appendChild(el('h2', {text:t('Pick up where you left off')}));
+    var tl = el('div', {class:'tiles'});
     var seen = {};
-    hist.forEach(function(h){ if (BY[h.skill] && !seen[h.skill] && Object.keys(seen).length < 3) { seen[h.skill] = 1; t.appendChild(tile(BY[h.skill])); } });
-    main.appendChild(t);
+    hist.forEach(function(h){ if (BY[h.skill] && !seen[h.skill] && Object.keys(seen).length < 3) { seen[h.skill] = 1; tl.appendChild(tile(BY[h.skill])); } });
+    main.appendChild(tl);
   }
   Object.keys(D.categories).forEach(function(cat){
     var items = ALL.filter(function(x){ return x.category === cat; });
     if (!items.length) return;
-    main.appendChild(el('h2', {text:D.categories[cat]}));
+    main.appendChild(el('h2', {text:t(D.categories[cat])}));
     var t2 = el('div', {class:'tiles'});
     items.forEach(function(x){ t2.appendChild(tile(x)); });
     main.appendChild(t2);
@@ -261,7 +286,7 @@ function tile(s){
   return el('a', {class:'tile', href:'#/' + s.kind + '/' + s.name}, [
     el('h3', {}, [el('span', {text:s.title}), star ? el('span', {class:'star', text:'\u2605'}) : null]),
     el('p', {text:s.description}),
-    el('span', {class:'badge', text: s.kind === 'app' ? 'Interactive app' : (s.network ? 'Skill \u00b7 fetches a website' : 'Skill \u00b7 runs on server')})
+    el('span', {class:'badge', text: s.kind === 'app' ? (s.agent ? 'In browser \u00b7 AI-ready' : 'In browser') : (s.network ? 'Server \u00b7 AI-ready \u00b7 reads websites' : 'Server \u00b7 AI-ready')})
   ]);
 }
 var loaded = {};
@@ -270,13 +295,14 @@ function appPage(name){
   main.textContent = '';
   if (!a) { main.appendChild(el('div', {class:'empty', text:'That app is not installed.'})); return; }
   var key = 'app:' + name, isFav = favs.indexOf(key) > -1;
-  var favBtn = el('button', {class:'btn ghost noprint', type:'button', 'aria-pressed': String(isFav), text: isFav ? '\u2605 Favorited' : '\u2606 Favorite'});
+  var favBtn = el('button', {class:'btn ghost noprint', type:'button', 'aria-pressed': String(isFav), text: isFav ? '\u2605 ' + t('Favorited') : '\u2606 ' + t('Favorite')});
   favBtn.addEventListener('click', function(){ var i = favs.indexOf(key); if (i > -1) favs.splice(i, 1); else favs.push(key); saveFavs(); renderSide(); appPage(name); });
   main.appendChild(el('div', {class:'skillhead noprint'}, [
-    el('div', {}, [el('span', {class:'badge', text: D.categories[a.category] + ' \u00b7 app'}), el('h1', {text:a.title, style:'margin-top:8px'}), el('p', {class:'lead', text:a.description, style:'margin:0'})]),
+    el('div', {}, [el('span', {class:'badge', text: D.categories[a.category] + (a.agent ? ' \u00b7 AI-ready' : '')}), el('h1', {text:a.title, style:'margin-top:8px'}), el('p', {class:'lead', text:a.description, style:'margin:0'}),
+      a.agent ? el('p', {class:'hint', style:'margin:6px 0 0'}, ['AI assistants can use this too: MCP tool ', el('code', {text:name}), ' or ', el('code', {text:'POST /api/skills/' + name}), '. ', el('a', {href:'#/connect', text:t('How to connect')})]) : null]),
     favBtn
   ]));
-  var root = el('div', {style:'margin-top:18px'}, [el('div', {class:'empty', text:'Loading...'})]);
+  var root = el('div', {style:'margin-top:18px'}, [el('div', {class:'empty', text:t('Loading...')})]);
   main.appendChild(root);
   function start(){ root.textContent = ''; try { CS.apps[name](root); } catch (e) { root.appendChild(el('div', {class:'err', role:'alert', text:'This app hit a problem and could not start.'})); if (window.console) console.error(e); } }
   if (CS.apps[name]) { start(); return; }
@@ -301,7 +327,7 @@ function skillPage(name, prefill){
     favBtn
   ]));
   var form = buildForm(s, prefill || {});
-  var out = el('div', {class:'panel', id:'out'}, [el('div', {class:'empty', text:'Results will show up here.'})]);
+  var out = el('div', {class:'panel', id:'out'}, [el('div', {class:'empty', text:t('Results will show up here.')})]);
   form.addEventListener('submit', function(ev){ ev.preventDefault(); run(s, form, out); });
   main.appendChild(el('div', {class:'cols'}, [el('div', {class:'panel'}, [form]), out]));
   if (s.network) main.appendChild(el('p', {class:'hint', text:'This skill fetches pages from the public web on the server. Private addresses are blocked.', style:'margin-top:14px'}));
@@ -323,7 +349,7 @@ function buildForm(s, pre){
     f.appendChild(ctl);
     if (r.description) f.appendChild(el('div', {class:'hint', text:r.description}));
   });
-  var go = el('button', {class:'btn', type:'submit', text:'Run skill'});
+  var go = el('button', {class:'btn', type:'submit', text:t('Run skill')});
   f.appendChild(el('div', {class:'row'}, [go]));
   return f;
 }
@@ -349,7 +375,7 @@ function run(s, form, out){
       record(s.name, body, r.ok);
     })
     .catch(function(){ out.textContent = ''; out.appendChild(el('div', {class:'err', role:'alert', text:'The request failed. Check your connection and try again.'})); })
-    .then(function(){ btn.disabled = false; btn.textContent = 'Run skill'; });
+    .then(function(){ btn.disabled = false; btn.textContent = t('Run skill'); });
 }
 function record(name, input, ok){
   hist.unshift({skill:name, input:input, ok:ok, at:Date.now()});
@@ -417,34 +443,34 @@ function value(v){
 }
 function table(rows){
   var cols = []; rows.forEach(function(r){ Object.keys(r).forEach(function(k){ if (cols.indexOf(k) < 0) cols.push(k); }); });
-  var t = el('table'), head = el('tr');
+  var tb = el('table'), head = el('tr');
   cols.forEach(function(c){ head.appendChild(el('th', {text:human(c)})); });
-  t.appendChild(el('thead', {}, [head]));
+  tb.appendChild(el('thead', {}, [head]));
   var body = el('tbody');
   rows.forEach(function(r){ var tr = el('tr'); cols.forEach(function(c){ tr.appendChild(el('td', {}, [value(r[c])])); }); body.appendChild(tr); });
-  t.appendChild(body);
-  return el('div', {class:'tablewrap'}, [t]);
+  tb.appendChild(body);
+  return el('div', {class:'tablewrap'}, [tb]);
 }
 
 function historyPage(){
   main.textContent = '';
-  main.appendChild(el('h1', {text:'Recent runs'}));
-  main.appendChild(el('p', {class:'lead', text:'Kept only in this browser. Open a run to load its inputs again.'}));
+  main.appendChild(el('h1', {text:t('Recent runs')}));
+  main.appendChild(el('p', {class:'lead', text:t('Kept only in this browser. Open a run to load its inputs again.')}));
   var p = el('div', {class:'panel'});
   var shown = hist.filter(function(h){ return BY[h.skill]; });
-  if (!shown.length) p.appendChild(el('div', {class:'empty', text:'Nothing yet. Run a skill and it will appear here.'}));
+  if (!shown.length) p.appendChild(el('div', {class:'empty', text:t('Nothing yet. Run a skill and it will appear here.')}));
   shown.forEach(function(h){
-    var open = el('a', {class:'btn ghost', href:'#/skill/' + h.skill, text:'Open', style:'text-decoration:none'});
+    var open = el('a', {class:'btn ghost', href:'#/skill/' + h.skill, text:t('Open'), style:'text-decoration:none'});
     open.addEventListener('click', function(){ mem.prefill = h.input; });
     p.appendChild(el('div', {class:'hist'}, [el('div', {}, [el('b', {text:BY[h.skill].title}), el('br'), el('small', {text:when(h.at) + (h.ok ? '' : ' · had errors')})]), open]));
   });
   main.appendChild(p);
-  if (shown.length) main.appendChild(el('div', {class:'row'}, [el('button', {class:'btn ghost', type:'button', text:'Clear history', onclick:function(){ hist = []; store('hist', hist); historyPage(); }})]));
+  if (shown.length) main.appendChild(el('div', {class:'row'}, [el('button', {class:'btn ghost', type:'button', text:t('Clear history'), onclick:function(){ hist = []; store('hist', hist); historyPage(); }})]));
 }
 function connectPage(){
   var b = D.base;
   main.textContent = '';
-  main.appendChild(el('h1', {text:'Connect and API'}));
+  main.appendChild(el('h1', {text:t('Connect and API')}));
   main.appendChild(el('p', {class:'lead', text:'Every skill in this hub is also a tool you can reach from other software.'}));
   function block(title, text, body){ return el('div', {class:'panel', style:'margin-bottom:14px'}, [el('h3', {text:title, style:'margin:0 0 6px'}), el('p', {class:'hint', text:text}), el('div', {class:'code has-btn'}, [copyBtn('Copy', body), el('pre', {text:body})])]); }
   main.appendChild(block('MCP (for AI assistants)', 'Add this URL as a remote MCP server in a client that supports Streamable HTTP. A server card is published for discovery.', b + '/mcp'));
