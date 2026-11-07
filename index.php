@@ -4,12 +4,14 @@ declare(strict_types=1);
 require __DIR__ . '/src/bootstrap.php';
 
 $registry = new Registry(__DIR__ . '/skills');
+$apps = new Apps(__DIR__ . '/apps');
 $mcp = new Mcp($registry);
 $base = Http::baseUrl();
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
-$prefix = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/')), '/');
+$script = (string) ($_SERVER['SCRIPT_NAME'] ?? '/');
+$prefix = str_ends_with($script, '.php') ? rtrim(str_replace('\\', '/', dirname($script)), '/') : '';
 if ($prefix !== '' && str_starts_with($path, $prefix)) {
     $path = substr($path, strlen($prefix)) ?: '/';
 }
@@ -23,7 +25,17 @@ if ($method === 'OPTIONS') {
 
 // ---- Catalog page ---------------------------------------------------------
 if ($path === '/' && $method === 'GET') {
-    Http::text(Page::catalog($registry, $base), 'text/html');
+    Http::text(Page::catalog($registry, $base, $apps), 'text/html');
+}
+
+// ---- Browser apps (JavaScript served from apps/<name>/app.js) -------------------
+if (preg_match('#^/apps/([a-z0-9-]+)\.js$#', $path, $am) && $method === 'GET') {
+    $src = $apps->source($am[1]);
+    if ($src === null) {
+        Http::json(['error' => 'Unknown app'], 404);
+    }
+    header('Cache-Control: no-cache');
+    Http::text($src, 'application/javascript');
 }
 
 // ---- REST API -------------------------------------------------------------
@@ -95,7 +107,7 @@ if ($path === '/.well-known/mcp/server-card.json' && $method === 'GET') {
 
 // ---- Discovery files ------------------------------------------------------
 if ($path === '/llms.txt' && $method === 'GET') {
-    Http::text(Page::llms($registry, $base));
+    Http::text(Page::llms($registry, $base, $apps));
 }
 
 if ($path === '/robots.txt' && $method === 'GET') {

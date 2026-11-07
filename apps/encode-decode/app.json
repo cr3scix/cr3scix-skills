@@ -1,0 +1,1 @@
+{ "name": "encode-decode", "title": "Encode, decode and JWT viewer", "description": "Base64, URL and HTML encoding in both directions, plus a viewer for the contents of a JWT.", "category": "developer" }

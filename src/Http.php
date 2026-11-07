@@ -55,7 +55,8 @@ final class Http
         if (!preg_match('/^[A-Za-z0-9.\-:\[\]]+$/', $host)) {
             $host = 'localhost';
         }
-        $dir = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/')), '/');
+        $script = (string) ($_SERVER['SCRIPT_NAME'] ?? '/');
+        $dir = str_ends_with($script, '.php') ? rtrim(str_replace('\\', '/', dirname($script)), '/') : '';
         return ($https ? 'https' : 'http') . '://' . $host . $dir;
     }
 

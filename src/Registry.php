@@ -9,9 +9,10 @@ declare(strict_types=1);
 final class Registry
 {
     public const CATEGORIES = [
-        'agent' => 'AI agent skills',
-        'business' => 'Business skills',
-        'developer' => 'Developer skills',
+        'agent' => 'AI agent tools',
+        'business' => 'Business tools',
+        'marketing' => 'Marketing and SEO',
+        'developer' => 'Developer tools',
     ];
 
     /** @var array<string, array<string,mixed>> */

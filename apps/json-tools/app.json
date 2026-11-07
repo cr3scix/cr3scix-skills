@@ -1,0 +1,1 @@
+{ "name": "json-tools", "title": "JSON formatter and validator", "description": "Format, minify, sort and validate JSON, with the line and column of any error.", "category": "developer" }

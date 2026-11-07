@@ -1,0 +1,1 @@
+{ "name": "prompt-builder", "title": "Prompt builder", "description": "Build a clear, structured prompt for an AI assistant from a role, task, context and output format, with starter presets.", "category": "agent" }

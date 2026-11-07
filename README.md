@@ -1,10 +1,31 @@
 # Cr3scix Skills
 
-An open-source dashboard of small, useful skills for businesses and developers. Run them in the browser, call them over a REST API, or connect the whole set to an AI assistant through MCP.
+An open-source dashboard of small, useful tools for businesses and developers. It has two kinds of tools:
+
+- **Interactive apps** run entirely in the visitor's browser (invoice maker, JSON formatter, SEO preview and more). Nothing is sent to the server.
+- **Skills** run on the server. Each one is also a REST endpoint and an MCP tool, so an AI assistant can use them too.
 
 It is a plain PHP app with no database and no build step, so it runs on ordinary shared hosting.
 
 ## What is in the box
+
+**Interactive apps**
+
+| App | Category |
+| --- | --- |
+| Invoice and quote maker (print or save as PDF) | Business |
+| Margin and break-even calculator | Business |
+| SEO title and description preview | Marketing and SEO |
+| UTM link builder | Marketing and SEO |
+| Text toolkit (counts, case, slugs, line cleanup) | Marketing and SEO |
+| JSON formatter and validator | Developer |
+| Regex tester | Developer |
+| Encode, decode and JWT viewer | Developer |
+| ID and password generator | Developer |
+| Prompt builder | AI agent |
+| AI crawler robots.txt builder | AI agent |
+
+**Skills (browser, REST and MCP)**
 
 | Skill | Category | What it does |
 | --- | --- | --- |
@@ -54,6 +75,22 @@ Skills that fetch web pages only reach public sites. Private, loopback and link-
 
 The app stores nothing about visitors. Favorites and recent runs live in the visitor's own browser.
 
+## Add your own interactive app
+
+Create `apps/my-app/app.json` with `name`, `title`, `description` and `category` (`agent`, `business`, `marketing` or `developer`), and `apps/my-app/app.js`:
+
+```js
+CS.apps['my-app'] = function (root) {
+  var el = CS.el;
+  var input = CS.inp('text', '', function (value) { out.set(value.toUpperCase()); });
+  var out = CS.out('');
+  CS.add(root, 'Type something', input);
+  root.appendChild(out);
+};
+```
+
+Helpers available on `CS`: `el`, `inp`, `area`, `sel`, `add`, `out` (a result box with a copy button), `copyBtn`, `value` (renders data as a table or list) and `money`. Keep apps free of outside requests so they stay private.
+
 ## Add your own skill
 
 Create a folder in `skills/`. The folder name is the skill name (lowercase, dashes).
@@ -94,7 +131,8 @@ Supported input types: `string`, `integer`, `number`, `boolean`, with `enum`, `d
 ```
 index.php        routes: dashboard, API, MCP, discovery files
 src/             registry, validation, MCP server, safe fetcher, dashboard page
-skills/          one folder per skill
+skills/          one folder per server-side skill
+apps/            one folder per browser app
 tests/run.php    dependency-free test suite
 ```
 

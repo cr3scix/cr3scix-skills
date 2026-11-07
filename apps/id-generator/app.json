@@ -1,0 +1,1 @@
+{ "name": "id-generator", "title": "ID and password generator", "description": "Generate UUIDs, strong random passwords and hex tokens using your browser's secure random source.", "category": "developer" }
