@@ -1,0 +1,15 @@
+# Route everything that is not a real file to index.php
+RewriteEngine On
+
+# Never serve source, tests or skill folders directly
+RewriteRule ^(src|tests|skills)(/|$) - [F,L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [L]
+
+<FilesMatch "^(config\.php|\.env.*|composer\.(json|lock))$">
+  Require all denied
+</FilesMatch>
+
+Options -Indexes

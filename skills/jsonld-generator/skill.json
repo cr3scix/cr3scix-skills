@@ -1,0 +1,25 @@
+{
+  "name": "jsonld-generator",
+  "title": "JSON-LD business generator",
+  "description": "Builds schema.org structured data for a business (Organization, LocalBusiness or ProfessionalService) that you can paste into a page.",
+  "category": "developer",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "type": { "type": "string", "enum": ["Organization", "LocalBusiness", "ProfessionalService"], "default": "Organization", "title": "Type" },
+      "name": { "type": "string", "title": "Business name", "maxLength": 200 },
+      "url": { "type": "string", "format": "url", "title": "Website URL" },
+      "description": { "type": "string", "title": "Description", "maxLength": 600, "x-multiline": true },
+      "email": { "type": "string", "format": "email", "title": "Email" },
+      "telephone": { "type": "string", "title": "Phone", "maxLength": 40 },
+      "logo": { "type": "string", "format": "url", "title": "Logo URL" },
+      "streetAddress": { "type": "string", "title": "Street address", "maxLength": 200 },
+      "city": { "type": "string", "title": "City", "maxLength": 100 },
+      "region": { "type": "string", "title": "State or region", "maxLength": 100 },
+      "postalCode": { "type": "string", "title": "Postal code", "maxLength": 20 },
+      "country": { "type": "string", "title": "Country code", "maxLength": 2, "description": "Two letters, for example IN or US." },
+      "sameAs": { "type": "string", "title": "Profile links", "maxLength": 1500, "x-multiline": true, "description": "One URL per line (social profiles, directories)." }
+    },
+    "required": ["name", "url"]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "agent-readiness-check",
+  "title": "Agent readiness check",
+  "description": "Checks how easy a website is for AI agents to read and use: robots.txt, sitemap, llms.txt, Markdown, structured data, trust pages and MCP discovery. Gives a score out of 100 with a fix for each failed check.",
+  "category": "agent",
+  "network": true,
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "url": { "type": "string", "format": "url", "title": "Website URL", "description": "The homepage of the site to check, for example example.com." }
+    },
+    "required": ["url"]
+  }
+}

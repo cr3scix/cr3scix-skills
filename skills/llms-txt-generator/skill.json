@@ -1,0 +1,17 @@
+{
+  "name": "llms-txt-generator",
+  "title": "llms.txt generator",
+  "description": "Reads a site's sitemap and drafts an llms.txt file in the standard layout: a title, a short summary and sections of Markdown links.",
+  "category": "agent",
+  "network": true,
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "url": { "type": "string", "format": "url", "title": "Website URL", "description": "The homepage of the site." },
+      "siteName": { "type": "string", "title": "Site name (optional)", "maxLength": 100, "description": "Used as the title. Defaults to the page title." },
+      "summary": { "type": "string", "title": "One-line summary (optional)", "maxLength": 400, "description": "Defaults to the homepage meta description." },
+      "maxLinks": { "type": "integer", "title": "Maximum links", "minimum": 5, "maximum": 60, "default": 30 }
+    },
+    "required": ["url"]
+  }
+}

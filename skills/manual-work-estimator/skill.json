@@ -1,0 +1,18 @@
+{
+  "name": "manual-work-estimator",
+  "title": "Manual work estimator",
+  "description": "Turns the hours a team spends on repetitive manual tasks into a yearly cost and a realistic automation saving.",
+  "category": "business",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "teamSize": { "type": "integer", "title": "People doing the work", "minimum": 1, "maximum": 100000, "description": "How many people spend time on the repetitive task." },
+      "hoursPerWeekEach": { "type": "number", "title": "Hours per week, each", "minimum": 0, "maximum": 80, "description": "Average hours each person spends on it per week." },
+      "hourlyCost": { "type": "number", "title": "Cost per hour", "minimum": 0, "maximum": 100000, "description": "Fully loaded cost of one working hour, in your own currency." },
+      "automatablePercent": { "type": "integer", "title": "Share that can be automated (%)", "minimum": 0, "maximum": 100, "default": 60, "description": "Be conservative. Work that needs judgment should not count." },
+      "workingWeeks": { "type": "integer", "title": "Working weeks per year", "minimum": 1, "maximum": 52, "default": 48 },
+      "buildCost": { "type": "number", "title": "Cost to build the automation (optional)", "minimum": 0, "maximum": 100000000, "description": "Adds a payback estimate when filled in." }
+    },
+    "required": ["teamSize", "hoursPerWeekEach", "hourlyCost"]
+  }
+}
