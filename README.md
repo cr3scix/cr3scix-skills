@@ -34,6 +34,16 @@ It is a plain PHP app with no database and no build step, so it runs on ordinary
 | Manual work estimator | Business | Turns hours of repetitive work into a yearly cost and a realistic automation saving |
 | JSON-LD business generator | Developer | Builds schema.org markup for an organization or local business |
 
+## Agent Skills
+
+Portable skills in the open [Agent Skills](https://agentskills.io/specification) format live in `agent-skills/`. Copy a folder into your agent's skills directory (for example `.claude/skills/` or `.agents/skills/`).
+
+| Skill | What it does |
+| --- | --- |
+| [social-media](agent-skills/social-media/SKILL.md) | Plan, write, repurpose, review and audit posts for any brand on X, LinkedIn, Instagram, Facebook, Threads, Bluesky, Mastodon, TikTok, YouTube, Pinterest, Google Business Profile and Reddit. Includes a dependency-free post checker (`scripts/check_post.py`). |
+
+See [ROADMAP.md](ROADMAP.md) for where the project is heading.
+
 ## One app, three ways in
 
 - **Dashboard** at `/`: sidebar, search, favorites, recent runs, readable results.
